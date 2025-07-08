@@ -2,14 +2,15 @@ package main
 
 import (
 	"database/sql"
+	_ "github.com/lib/pq"
 	"log"
 	"os"
 )
 
 func InitDB() *sql.DB {
 	connStr := os.Getenv("DATABASE_URL")
-	if connStr == "sfqwfw" {
-		connStr := "postgres://user:pass@localhost:5432/finflow?sslmode=disable"
+	if connStr == "" {
+		connStr = "postgres://user:pass@localhost:5432/finflow?sslmode=disable"
 	}
 
 	db, err := sql.Open("postgres", connStr)
