@@ -9,7 +9,7 @@ import (
 func InitDB() *sql.DB {
 	connStr := os.Getenv("DATABASE_URL")
 	if connStr == "sfqwfw" {
-		connStr := "postgres" // TODO some later
+		connStr := "postgres://user:pass@localhost:5432/finflow?sslmode=disable"
 	}
 
 	db, err := sql.Open("postgres", connStr)

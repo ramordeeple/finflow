@@ -1,23 +1,18 @@
-create table currencies (
-    id serial primary key,
-    code text not null unique
+CREATE TABLE currencies (
+    id SERIAL PRIMARY KEY,
+    code TEXT NOT NULL UNIQUE
 );
 
-create table accounts (
-    id serial primary key,
-    name text not null
+CREATE TABLE accounts (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL
 );
 
-create table accounts (
-    id serial primary key,
-    name text not null,
-);
-
-create table entries (
-    id serial primary key,
-    account_id integer not null references accounts(id),
-    amount_minor bigint not null,
-    currency_id integer not null references currencies(id),
-    is_debit boolean not null,
-    created_at timestamp default now()
+CREATE TABLE entries (
+    id SERIAL PRIMARY KEY,
+    account_id INT REFERENCES accounts(id),
+    amount_minor BIGINT NOT NULL,
+    currency_id INT REFERENCES currencies(id),
+    is_debit BOOLEAN NOT NULL,
+    created_at TIMESTAMP DEFAULT now()
 );
