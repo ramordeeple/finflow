@@ -2,14 +2,24 @@ version: "3.9"
 services:
   db:
     image: postgres:latest
+    container_name: finflow-db
     environment:
       POSTGRES_DB: finflow
       POSTGRES_USER: finuser
       POSTGRES_PASSWORD: 123
-    ports:
-      - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+    container_name: finflow-app
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: postgres://finuser:123@db:5432/finflow?sslmode=disable
 
 volumes:
   pgdata:
