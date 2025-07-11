@@ -2,25 +2,20 @@ package main
 
 import (
 	"database/sql"
+	"finflow/config"
+	"finflow/utils"
 	_ "github.com/lib/pq"
 	"log"
-	"os"
 )
 
 func InitDB() *sql.DB {
-	connStr := os.Getenv("DATABASE_URL")
-	if connStr == "" {
-		connStr = "postgres://finuser:123@localhost:5432aaqqzZ/finflow?sslmode=disable"
-	}
-
+	connStr := config.GetDatabaseURL()
 	db, err := sql.Open("postgres", connStr)
-	if err != nil {
-		log.Fatal("Database connection error: ", err)
-	}
 
-	if err := db.Ping(); err != nil {
-		log.Fatal("Database ping error: ", err)
-	}
+	utils.FatalErr("Database connection error:", err)
 
+	utils.FatalErr("Database ping error:", db.Ping())
+
+	log.Println("Successfully connected to the database")
 	return db
 }
