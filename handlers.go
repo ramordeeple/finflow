@@ -4,8 +4,15 @@ import (
 	"database/sql"
 	"encoding/json"
 	"finflow/models"
+	"log"
 	"net/http"
 )
+
+func ErrorHandler(message string, err error) {
+	if err != nil {
+		log.Fatal(message, err)
+	}
+}
 
 func GetCashflowHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	query := `
