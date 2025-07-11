@@ -13,6 +13,7 @@ services:
   app:
     build:
       context: .
+    env_file: .env
     container_name: finflow-app
     depends_on:
       - db
