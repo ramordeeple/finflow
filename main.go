@@ -1,12 +1,16 @@
 package main
 
 import (
+	"finflow/utils"
+	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 	"os"
 )
 
 func main() {
+	err := godotenv.Load()
+	utils.PrintErr("Error loading .env file: ", err)
 	db := InitDB()
 	defer db.Close()
 
