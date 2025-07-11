@@ -2,8 +2,8 @@ package utils
 
 import "log"
 
-func ErrorHandler(message string, err error) {
+func FatalErr(message string, err error) {
 	if err != nil {
-		log.Fatal(message, err)
+		log.Fatalf("%s: %v", message, err)
 	}
 }
