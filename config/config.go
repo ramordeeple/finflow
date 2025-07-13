@@ -1,7 +1,9 @@
 package config
 
-import "os"
+import (
+	"os"
+)
 
 func GetDatabaseURL() string {
-	return os.Getenv("DATABASE_URL")
+	return os.Getenv("DATABASE_URL") // Takes from .env
 }
