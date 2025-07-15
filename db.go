@@ -2,20 +2,30 @@ package main
 
 import (
 	"database/sql"
-	"finflow/config"
-	"finflow/utils"
+	"fmt"
+	"os"
+
 	_ "github.com/lib/pq"
-	"log"
 )
 
-func InitDB() *sql.DB {
-	connStr := config.GetDatabaseURL()
-	db, err := sql.Open("postgres", connStr)
+func ConnectDB() (*sql.DB, error) {
+	host := getenv("DB_HOST", "localhost")
+	port := getenv("DB_PORT", "5432")
+	user := getenv("DB_USER", "postgres")
+	pass := getenv("DB_PASS", "123")
+	name := getenv("DB_NAME", "postgres")
 
-	utils.FatalErr("Database connection error:", err)
+	dsn := fmt.Sprintf(
+		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		host, port, user, pass, name,
+	)
 
-	utils.FatalErr("Database ping error:", db.Ping())
+	return sql.Open("postgres", dsn)
+}
 
-	log.Println("Successfully connected to the database")
-	return db
+func getenv(key, fallback string) string {
+	if v, ok := os.LookupEnv(key); ok {
+		return v
+	}
+	return fallback
 }

@@ -1,31 +1,32 @@
 package main
 
 import (
-	"finflow/utils"
-	"github.com/joho/godotenv"
 	"log"
 	"net/http"
-	"os"
+	"time"
 )
 
 func main() {
-	err := godotenv.Load()
-	utils.PrintErr("Error loading .env file: ", err)
-	db := InitDB()
+	db, err := ConnectDB()
+	if err != nil {
+		log.Fatalf("DB connection failed: %v", err)
+	}
 	defer db.Close()
 
-	http.HandleFunc("/v1/cashflow", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == http.MethodGet {
-			GetCashflowHandler(db, w, r)
-		} else {
-			http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-		}
-	})
+	mux := http.NewServeMux()
+	mux.HandleFunc("/api/payments", NewPaymentsHandler(db))
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
+	srv := &http.Server{
+		Addr:              ":8080",
+		Handler:           mux,
+		ReadTimeout:       5 * time.Second,
+		WriteTimeout:      10 * time.Second,
+		ReadHeaderTimeout: 2 * time.Second,
+		IdleTimeout:       120 * time.Second,
 	}
-	log.Println("Server started on port ", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+
+	log.Println("FinFlow server running at http://localhost:8080")
+	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		log.Fatalf("Server error: %v", err)
+	}
 }

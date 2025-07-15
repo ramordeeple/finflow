@@ -2,17 +2,11 @@ package models
 
 import "time"
 
-type Cashflow struct {
-	AccountName string  `json:"account_name"`
-	Amount      float64 `json:"amount"`
-	Currency    string  `json:"currency"`
-}
-
-type Entry struct {
-	ID          int64
-	AccountID   int64
-	AmountMinor int64
-	Currency    string
-	IsDebit     bool
-	Timestamp   time.Time
+type Payment struct {
+	ID         int       `json:"id"`
+	AccountID  int       `json:"account_id"`
+	CategoryID int       `json:"category_id"`
+	Amount     float64   `json:"amount"`
+	Direction  string    `json:"direction"` // 'I' — приход, 'O' — расход
+	PayDate    time.Time `json:"pay_date"`
 }
